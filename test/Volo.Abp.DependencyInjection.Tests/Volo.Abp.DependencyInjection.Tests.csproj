@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Volo.Abp\Volo.Abp.csproj" />
-    <ProjectReference Include="..\Volo.Abp.DependencyInjection.Tests\Volo.Abp.DependencyInjection.Tests.csproj" />
+    <ProjectReference Include="..\..\src\Volo.Abp.DependencyInjection\Volo.Abp.DependencyInjection.csproj" />
   </ItemGroup>
 
 </Project>

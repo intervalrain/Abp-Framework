@@ -17,6 +17,7 @@ public class AbpApplication : IDisposable
         StartupModuleType = startupModuleType;
         _services = services;
         _services.AddCoreAbp();
+        _services.TryAddSingleton(StartupModuleType);
     }
 
     public static AbpApplication Create<TStartupModule>(IServiceCollection services)

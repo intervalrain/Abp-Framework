@@ -21,12 +21,12 @@ public static class AbpConventionalDependencyInjection
 
     public static void AddType(this IServiceCollection services, Type type)
     {
-        if (typeof(ITransientDependency).GetType().IsAssignableFrom(type))
+        if (typeof(ITransientDependency).IsAssignableFrom(type))
         {
             services.AddTransient(type);
         }
 
-        if (typeof(ISingletonDependency).GetType().IsAssignableFrom(type))
+        if (typeof(ISingletonDependency).IsAssignableFrom(type))
         {
             services.AddSingleton(type);
         }
@@ -34,9 +34,8 @@ public static class AbpConventionalDependencyInjection
 
     private static IEnumerable<Type> FilterInjectableTypes(this IEnumerable<Type> types)
     {
-        return types.Where(t => 
+        return types.Where(type => 
         {
-            var type = t.GetType();
             return type.IsClass && !type.IsAbstract && !type.IsGenericType;
         });
     }
