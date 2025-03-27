@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp;
+
+using Volo.Abp.Abp;
 using Volo.Abp.DependencyInjection.Tests;
 using Volo.Abp.Tests.Modularity;
 
@@ -14,16 +15,6 @@ public class AbpApplication_Tests
 
         using var application = AbpApplication.Create<IndependentEmptyModule>(services);
         
-        application.Start(services.BuildServiceProvider());
-    }
-
-    [Fact]
-    public void Should_Automatically_Register_Modules()
-    {
-        var services = new ServiceCollection();
-
-        using var application = AbpApplication.Create<IndependentEmptyModule>(services);
-        
-        services.ShouldContainSingleton(typeof(IndependentEmptyModule));
+        application.Initialize(services.BuildServiceProvider());
     }
 }

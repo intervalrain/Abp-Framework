@@ -1,0 +1,36 @@
+using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Modularity;
+
+namespace Volo.Abp.Abp;
+
+public class AbpApplication : IAbpApplication
+{
+    public Type StartupModuleType { get; }
+
+    private IServiceProvider? _serviceProvider;
+
+    private AbpApplication(Type startupModuleType, IServiceCollection services)
+    {
+        StartupModuleType = startupModuleType;
+        services.AddSingleton<IAbpApplication>(this);
+        services.AddCoreAbpServices(); 
+        services.GetSingletonInstance<IModuleLoader>().LoadAll(services, startupModuleType);
+    }
+
+    public static AbpApplication Create<TStartupModule>(IServiceCollection services)
+        where TStartupModule : IAbpModule
+    {
+        return new AbpApplication(typeof(TStartupModule), services);
+    }
+
+    public void Initialize(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+
+        _serviceProvider.GetRequiredService<IModuleManager>().Initialize();
+    }
+
+    public void Dispose()
+    {
+    }
+}

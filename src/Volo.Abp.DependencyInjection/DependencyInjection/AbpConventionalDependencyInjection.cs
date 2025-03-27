@@ -6,6 +6,11 @@ namespace Volo.Abp.DependencyInjection.DependencyInjection;
 
 public static class AbpConventionalDependencyInjection
 {
+    public static void AddAssemblyOf<T>(this IServiceCollection services)
+    {
+        services.AddAssembly(typeof(T).Assembly);
+    }
+
     public static void AddAssembly(this IServiceCollection services, Assembly assembly)
     {
         services.AddTypes(AssemblyHelper.GetAllTypes(assembly).FilterInjectableTypes().ToArray());

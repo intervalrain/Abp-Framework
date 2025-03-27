@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Volo.Abp\Volo.Abp.csproj" />
+    <ProjectReference Include="..\..\..\src\Volo.Abp.AspNetCore\Volo.Abp.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\src\Volo.Abp.DependencyInjection\Volo.Abp.DependencyInjection.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
