@@ -1,6 +1,10 @@
 using System.Data;
 using System.Reflection;
+
+
 using Microsoft.Extensions.DependencyInjection;
+
+
 using Volo.Abp.DependencyInjection.Internal;
 
 namespace Volo.Abp.DependencyInjection.DependencyInjection;
@@ -27,7 +31,7 @@ public static class AbpConventionalDependencyInjection
 
     public static void AddType(this IServiceCollection services, Type type)
     {
-        foreach (var serviceType in FindDefaultServiceTypes(type))
+        foreach (var serviceType in FindServiceTypes(type))
         {
             if (typeof(ITransientDependency).IsAssignableFrom(type))
             {
@@ -46,8 +50,18 @@ public static class AbpConventionalDependencyInjection
         }
     }
 
-    private static List<Type> FindDefaultServiceTypes(Type type)
+    private static List<Type> FindServiceTypes(Type type)
     {
+        var customExposedServices = type.GetCustomAttributes()
+            .OfType<IExposedServiceTypesProvider>()
+            .SelectMany(p => p.GetExposedServiceTypes()).ToList();
+
+        if (customExposedServices.Any())
+        {
+            return customExposedServices;
+        }
+
+
         List<Type> serviceTypes = [type];
 
         foreach (var interfaceType in type.GetInterfaces())
