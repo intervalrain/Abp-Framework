@@ -26,4 +26,15 @@ public static class ServiceCollectionShouldlyExtensions
         serivceDescriptor.ImplementationInstance.ShouldBeNull();
         serivceDescriptor.Lifetime.ShouldBe(ServiceLifetime.Singleton);
     }
+
+        public static void ShouldContainScoped(this IServiceCollection services, Type type)
+    {
+        var serivceDescriptor = services.FirstOrDefault(s => s.ServiceType == type)!;
+
+        serivceDescriptor.ShouldNotBeNull();
+        serivceDescriptor.ImplementationType.ShouldBe(type);
+        serivceDescriptor.ImplementationFactory.ShouldBeNull();
+        serivceDescriptor.ImplementationInstance.ShouldBeNull();
+        serivceDescriptor.Lifetime.ShouldBe(ServiceLifetime.Scoped);
+    }
 }

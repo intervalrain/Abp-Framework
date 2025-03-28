@@ -1,3 +1,4 @@
+using System.Data;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection.Internal;
@@ -26,15 +27,43 @@ public static class AbpConventionalDependencyInjection
 
     public static void AddType(this IServiceCollection services, Type type)
     {
-        if (typeof(ITransientDependency).IsAssignableFrom(type))
+        foreach (var serviceType in FindDefaultServiceTypes(type))
         {
-            services.AddTransient(type);
+            if (typeof(ITransientDependency).IsAssignableFrom(type))
+            {
+                services.AddTransient(serviceType, type);
+            }
+
+            if (typeof(ISingletonDependency).IsAssignableFrom(type))
+            {
+                services.AddSingleton(serviceType, type);
+            }
+
+            if (typeof(IScopedDependency).IsAssignableFrom(type))
+            {
+                services.AddScoped(serviceType, type);
+            }
+        }
+    }
+
+    private static List<Type> FindDefaultServiceTypes(Type type)
+    {
+        List<Type> serviceTypes = [type];
+
+        foreach (var interfaceType in type.GetInterfaces())
+        {
+            var interfaceName = interfaceType.Name;
+            if (interfaceName.StartsWith('I'))
+            {
+                interfaceName = interfaceName.Substring(1);
+            }
+            if (type.Name.EndsWith(interfaceName))
+            {
+                serviceTypes.Add(interfaceType);
+            }
         }
 
-        if (typeof(ISingletonDependency).IsAssignableFrom(type))
-        {
-            services.AddSingleton(type);
-        }
+        return serviceTypes;
     }
 
     private static IEnumerable<Type> FilterInjectableTypes(this IEnumerable<Type> types)
