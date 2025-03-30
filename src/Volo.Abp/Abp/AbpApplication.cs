@@ -3,7 +3,7 @@ using Volo.Abp.Modularity;
 
 namespace Volo.Abp.Abp;
 
-public class AbpApplication : IAbpApplication
+public class AbpApplication : IDisposable
 {
     public Type StartupModuleType { get; }
 
@@ -12,7 +12,7 @@ public class AbpApplication : IAbpApplication
     private AbpApplication(Type startupModuleType, IServiceCollection services)
     {
         StartupModuleType = startupModuleType;
-        services.AddSingleton<IAbpApplication>(this);
+        services.AddSingleton(this);
         services.AddCoreAbpServices(); 
         services.GetSingletonInstance<IModuleLoader>().LoadAll(services, startupModuleType);
     }

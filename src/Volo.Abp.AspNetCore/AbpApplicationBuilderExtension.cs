@@ -10,7 +10,7 @@ public static class AbpApplicationBuilderExtension
 {
     public static void InitializeAbpApplication(this IApplicationBuilder app)
     {
-        var abpApplication = app.ApplicationServices.GetRequiredService<IAbpApplication>();
+        var abpApplication = app.ApplicationServices.GetRequiredService<AbpApplication>();
 
         app.ApplicationServices.GetRequiredService<ApplicationBuilderAccessor>().App = app;
 
