@@ -18,7 +18,7 @@ public class ModuleLoader : IModuleLoader
             throw new InvalidOperationException($"{nameof(LoadAll)} should be called only once!");
         }
 
-        FillModules(startupModuleType);
+        FillModules(services, startupModuleType);
         SetModuleDependencies();
         SortByDependency(startupModuleType);
         ConfigureServices(services);
@@ -37,9 +37,9 @@ public class ModuleLoader : IModuleLoader
     }
 
 
-    private void FillModules(Type startupModuleType)
+    private void FillModules(IServiceCollection services, Type startupModuleType)
     {
-        FindAllModuleTypes(startupModuleType).Distinct().ForEach(type => _modules.Add(CreateModuleDescriptor(type)));
+        FindAllModuleTypes(startupModuleType).Distinct().ForEach(type => _modules.Add(CreateModuleDescriptor(services, type)));
     }
 
     protected virtual IEnumerable<Type> FindAllModuleTypes(Type startupModuleType)
@@ -50,10 +50,19 @@ public class ModuleLoader : IModuleLoader
         return types;
     }
 
-    protected virtual AbpModuleDescriptor CreateModuleDescriptor(Type type)
+    protected virtual AbpModuleDescriptor CreateModuleDescriptor(IServiceCollection services, Type moduleType)
     {
-        return new AbpModuleDescriptor(type, (IAbpModule)Activator.CreateInstance(type)!);
+        return new AbpModuleDescriptor(moduleType, CreateAndRegisterModule(services, moduleType));
     }
+
+    private IAbpModule CreateAndRegisterModule(IServiceCollection services, Type moduleType)
+    {
+        var module = (IAbpModule)Activator.CreateInstance(moduleType)!;
+        services.AddSingleton(moduleType, module);
+        
+        return module;
+    }
+
 
     private void ConfigureServices(IServiceCollection services)
     {

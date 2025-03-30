@@ -5,7 +5,7 @@ public class DependOnAttribute(params Type[] dependedModuleTypes) : Attribute, I
 {
     public Type[] DependedModuleTypes { get; } = dependedModuleTypes;
 
-    public Type[] GetDependedModuleTypes()
+    public virtual Type[] GetDependedModuleTypes()
     {
         return DependedModuleTypes;
     }

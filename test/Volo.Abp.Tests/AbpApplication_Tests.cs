@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
+using Shouldly;
+
 using Volo.Abp.Abp;
-using Volo.Abp.DependencyInjection.Tests;
 using Volo.Abp.Tests.Modularity;
 
 namespace Volo.Abp.Tests;
@@ -9,12 +10,18 @@ namespace Volo.Abp.Tests;
 public class AbpApplication_Tests
 {
     [Fact]
-    public void Should_Start_And_Stop_Empty_Application()
+    public void Should_Initialize_SingleModule_Application()
     {
+        // Arrange
         var services = new ServiceCollection();
 
+        // Act
         using var application = AbpApplication.Create<IndependentEmptyModule>(services);
-        
         application.Initialize(services.BuildServiceProvider());
+
+        // Assert
+        var module = application.ServiceProvider?.GetRequiredService<IndependentEmptyModule>();
+        module?.ConfigureServicesIsCalled.ShouldBeTrue();
+        module?.OnApplicationInitializeIsCalled.ShouldBeTrue();
     }
 }

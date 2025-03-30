@@ -18,7 +18,12 @@ public static class AbpConventionalDependencyInjection
 
     public static void AddAssembly(this IServiceCollection services, Assembly assembly)
     {
-        services.AddTypes(AssemblyHelper.GetAllTypes(assembly).FilterInjectableTypes().ToArray());
+        var types = AssemblyHelper.GetAllTypes(assembly)
+            .Where(t => t.IsClass &&
+                  !t.IsAbstract &&
+                  !t.IsGenericType &&
+                  !t.IsDefined(typeof(DisableAutoDependencyInjectionRegistrationAttribute)));
+        services.AddTypes(types.ToArray());
     }
 
     public static void AddTypes(this IServiceCollection services, params Type[] types)
@@ -78,13 +83,5 @@ public static class AbpConventionalDependencyInjection
         }
 
         return serviceTypes;
-    }
-
-    private static IEnumerable<Type> FilterInjectableTypes(this IEnumerable<Type> types)
-    {
-        return types.Where(type => 
-        {
-            return type.IsClass && !type.IsAbstract && !type.IsGenericType;
-        });
     }
 }

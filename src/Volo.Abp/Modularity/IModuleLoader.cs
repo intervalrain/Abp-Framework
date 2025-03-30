@@ -1,10 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 
-using Volo.Abp.DependencyInjection.DependencyInjection;
-
 namespace Volo.Abp.Modularity;
 
-public interface IModuleLoader : ISingletonDependency
+public interface IModuleLoader
 {
     IReadOnlyList<AbpModuleDescriptor> Modules { get; }
 

@@ -7,7 +7,7 @@ public class AbpApplication : IDisposable
 {
     public Type StartupModuleType { get; }
 
-    private IServiceProvider? _serviceProvider;
+    public IServiceProvider? ServiceProvider { get; private set; }
 
     private AbpApplication(Type startupModuleType, IServiceCollection services)
     {
@@ -25,9 +25,9 @@ public class AbpApplication : IDisposable
 
     public void Initialize(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        ServiceProvider = serviceProvider;
 
-        _serviceProvider.GetRequiredService<IModuleManager>().Initialize();
+        ServiceProvider.GetRequiredService<IModuleManager>().Initialize();
     }
 
     public void Dispose()
