@@ -20,6 +20,7 @@ public class ModuleLoader : IModuleLoader
 
         FillModules(startupModuleType);
         SetModuleDependencies();
+        SortByDependency(startupModuleType);
         ConfigureServices(services);
     }
 
@@ -27,6 +28,14 @@ public class ModuleLoader : IModuleLoader
     {
         Modules.ForEach(SetModuleDependencies);
     }
+
+    private void SortByDependency(Type startupModuleType)
+    {
+        _modules.SortByDependencies(m => m.Dependencies);
+        _modules.MoveItem(m => m.Type == typeof(AbpKernelModule), 0);
+        _modules.MoveItem(m => m.Type == startupModuleType, _modules.Count - 1);
+    }
+
 
     private void FillModules(Type startupModuleType)
     {
