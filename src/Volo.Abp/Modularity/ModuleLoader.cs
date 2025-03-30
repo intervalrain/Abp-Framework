@@ -73,7 +73,7 @@ public class ModuleLoader : IModuleLoader
 
         var dependencyDescriptors = moduleType
             .GetCustomAttributes()
-            .OfType<IModuleDependencyDescriptor>();
+            .OfType<IDependedModuleTypesProvider>();
 
         foreach (var descriptor in dependencyDescriptors) foreach (var dependedModuleType in descriptor.GetDependedModuleTypes())
         {
