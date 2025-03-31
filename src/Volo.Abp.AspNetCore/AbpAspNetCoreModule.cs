@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 using Volo.Abp.DependencyInjection.DependencyInjection;
@@ -9,7 +10,7 @@ public class AbpAspNetCoreModule : IAbpModule
 {
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddObjectAccessor<IApplicationBuilder>();
         services.AddAssemblyOf<AbpAspNetCoreModule>();
-        // services.AddSingleton<IModuleInitializer, AspNetCoreModuleInitializer>();
     }
 }

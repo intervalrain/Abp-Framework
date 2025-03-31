@@ -8,11 +8,11 @@ public class Startup(IConfiguration configuration)
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddAbpApplication<AppModule>();
+        services.AddApplication<AppModule>();
     }
 
     public void Configure(IApplicationBuilder app, IHostEnvironment env, ILoggerFactory loggerFactory)
     {
-        app.InitializeAbpApplication();
+        app.InitializeApplication();
     }
 }

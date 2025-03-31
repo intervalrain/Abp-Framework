@@ -9,7 +9,7 @@ using Volo.Abp.DependencyInjection.Internal;
 
 namespace Volo.Abp.DependencyInjection.DependencyInjection;
 
-public static class AbpConventionalDependencyInjection
+public static class ServiceCollectionRegistrationExtensions
 {
     public static void AddAssemblyOf<T>(this IServiceCollection services)
     {

@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
+using Shouldly;
+
 using Volo.Abp.DependencyInjection.DependencyInjection;
 
 namespace Volo.Abp.DependencyInjection.Tests;
@@ -53,6 +55,28 @@ public class AbpConventionalDependencyInjectionExtensions_Tests
         _services.ShouldNotContain(typeof(MyServiceWithExposeList), typeof(MyServiceWithExposeList));
     }
 
+    [Fact]
+    public void AddObjectAccessor_Test()
+    {
+        //Arrange
+
+        var obj = new MyEmptyClass();
+
+        //Act
+
+        var accessor = _services.AddObjectAccessor<MyEmptyClass>();
+        accessor.Object = obj;
+
+        //Assert
+
+        _services.GetSingletonInstance<IObjectAccessor<MyEmptyClass>>().Object.ShouldBe(obj);
+        _services.GetSingletonInstance<ObjectAccessor<MyEmptyClass>>().Object.ShouldBe(obj);
+
+        var serviceProvider = _services.BuildServiceProvider();
+        serviceProvider.GetRequiredService<IObjectAccessor<MyEmptyClass>>().Object.ShouldBe(obj);
+        serviceProvider.GetRequiredService<ObjectAccessor<MyEmptyClass>>().Object.ShouldBe(obj);
+    }
+
     public class MyTransientClass : ITransientDependency { }
     public class MySingletonClass : ISingletonDependency { }
     public class MyScopedClass : IScopedDependency { }
@@ -62,4 +86,6 @@ public class AbpConventionalDependencyInjectionExtensions_Tests
 
     [ExposeServices(typeof(IMyService1), typeof(IMyService2))]
     public class MyServiceWithExposeList : IMyService1, IMyService2, ITransientDependency { }
+
+    public class MyEmptyClass { }
 }

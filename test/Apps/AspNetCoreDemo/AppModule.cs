@@ -1,26 +1,22 @@
 using Volo.Abp.Modularity;
-using Volo.Abp.AspNetCore.Builder;
 using Volo.Abp.AspNetCore;
+using Volo.Abp.AspNetCore.Modularity;
 
 namespace AspNetCoreDemo;
 
 [DependOn(typeof(AbpAspNetCoreModule))]
-public class AppModule : IAbpModule, IConfigureAspNet
+public class AppModule : AbpModule
 {
-    public void ConfigureServices(IServiceCollection services)
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
-    }
-    
-    public void Configure(AspNetConfigurationContext context)
-    {
-        // context.LoggerFactory.AddConsole();
+        var app = context.GetApplicationBuilder();
 
-        if (context.Environment.IsDevelopment())   
+        if (context.GetEnvironment().IsDevelopment())   
         {
-            context.App.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();
         }
 
-        context.App.Run(async (ctx) =>
+        app.Run(async (ctx) =>
         {
             await ctx.Response.WriteAsync("Hello World 3!");
         });

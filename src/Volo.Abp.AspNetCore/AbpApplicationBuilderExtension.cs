@@ -8,13 +8,10 @@ namespace Volo.Abp.AspNetCore;
 
 public static class AbpApplicationBuilderExtension
 {
-    public static void InitializeAbpApplication(this IApplicationBuilder app)
+    public static void InitializeApplication(this IApplicationBuilder app)
     {
-        var abpApplication = app.ApplicationServices.GetRequiredService<AbpApplication>();
-
-        app.ApplicationServices.GetRequiredService<ApplicationBuilderAccessor>().App = app;
-
-        abpApplication.Initialize(app.ApplicationServices);
+        app.ApplicationServices.GetRequiredService<ObjectAccessor<IApplicationBuilder>>().Object = app;
+        app.ApplicationServices.GetRequiredService<AbpApplication>().Initialize(app.ApplicationServices);
     }
 }
 

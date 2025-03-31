@@ -7,9 +7,9 @@ namespace Volo.Abp.AspNetCore;
 
 public static class AbpServiceCollectionExtensions
 {
-    public static void AddAbpApplication<TStartupModule>(this IServiceCollection services)
+    public static AbpApplication AddApplication<TStartupModule>(this IServiceCollection services)
         where TStartupModule : IAbpModule
     {
-        AbpApplication.Create<TStartupModule>(services);
+        return AbpApplication.Create<TStartupModule>(services);
     }
 }

@@ -14,7 +14,7 @@ public class IndependentEmptyModule : AbpModule
         ConfigureServicesIsCalled = true;
     }
 
-    public override void OnApplicationInitialize()
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         OnApplicationInitializeIsCalled = true;
     }
