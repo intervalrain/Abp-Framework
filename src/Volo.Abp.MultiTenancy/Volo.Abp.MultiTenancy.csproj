@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Volo.CodeAnnotations\Volo.CodeAnnotations.csproj" />
+    <ProjectReference Include="..\Volo.Abp.DependencyInjection\Volo.Abp.DependencyInjection.csproj" />
+    <ProjectReference Include="..\Volo.Abp\Volo.Abp.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

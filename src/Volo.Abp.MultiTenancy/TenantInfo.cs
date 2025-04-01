@@ -4,7 +4,7 @@ using Volo.CodeAnnotations;
 
 namespace Volo.Abp.MultiTenancy;
 
-public class TenantInfo : ITenantInfo
+public class TenantInfo
 {
     public string Id { get; }
 

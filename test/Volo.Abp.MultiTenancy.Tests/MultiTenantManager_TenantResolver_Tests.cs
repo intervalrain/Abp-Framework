@@ -1,4 +1,7 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Buffers;
+using System.Reflection.Metadata;
+
+using NSubstitute;
 
 using Shouldly;
 
@@ -10,7 +13,7 @@ public class MultiTenantManager_TenantResolver_Tests
     public void Should_Get_Current_Tenant_As_Null_If_No_Resolver()
     {
         // Arrange
-        var manager = new MultiTenancyManager([]);
+        var manager = new MultiTenancyManager(Substitute.For<IAmbientTenantAccessor>(), []);
 
         // Act
         manager.CurrentTenant.ShouldBeNull();
@@ -23,7 +26,7 @@ public class MultiTenantManager_TenantResolver_Tests
         var fakeTenant = new TenantInfo(Guid.NewGuid().ToString(), "test");
 
         // Act
-        var manager = new MultiTenancyManager(
+        var manager = new MultiTenancyManager(Substitute.For<IAmbientTenantAccessor>(),
             [
                 new TenantResolverAction(context => 
                 {
@@ -45,7 +48,7 @@ public class MultiTenantManager_TenantResolver_Tests
         var emptyTenant2 = new TenantInfo(Guid.NewGuid().ToString(), "empty2");
 
         // Act
-        var manager = new MultiTenancyManager(
+        var manager = new MultiTenancyManager(Substitute.For<IAmbientTenantAccessor>(),
             [
                 new TenantResolverAction(context => 
                 {
@@ -66,4 +69,32 @@ public class MultiTenantManager_TenantResolver_Tests
         // Assert
         manager.CurrentTenant.ShouldBe(fakeTenant);
     }
+
+    [Fact]
+    public void Should_Get_Ambient_Tenant_If_Changed()
+    {
+        // Arrange
+        var oldTenant = new TenantInfo(Guid.NewGuid().ToString(), "old-tenant");
+
+        var manager = new MultiTenancyManager(Substitute.For<IAmbientTenantAccessor>(), 
+            [
+                new TenantResolverAction(context =>
+                {
+                    context.Tenant = oldTenant;
+                    context.Handled = true;
+                })
+            ]);
+
+        manager.CurrentTenant.ShouldBe(oldTenant);
+
+        // Act
+        var overridedTenant = new TenantInfo(Guid.NewGuid().ToString(), "overrided-tenant");
+        using (manager.ChangeTenant(overridedTenant))
+        {
+            // Assert
+            manager.CurrentTenant.ShouldBe(overridedTenant);
+        }
+        // Assert
+        manager.CurrentTenant.ShouldBe(oldTenant);
+    }   
 }
