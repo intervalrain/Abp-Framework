@@ -1,7 +1,7 @@
 namespace Volo.Abp.MultiTenancy;
 
-public interface ICurrentTenantAccessor
+public interface ITenantInfo
 {
-    Guid Id { get; }
+    string Id { get; }
     string Name { get; }
 }
